@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LOS Dashboard</title>
-
   <!-- Bootstrap 5 CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Plotly.js -->
   <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-
   <style>
     body { padding-top: 1rem; }
     .chart { width: 100%; margin-bottom: 2rem; }
     table { table-layout: fixed; width: 100%; }
     th, td { text-align: center; word-wrap: break-word; }
+    .dropdown-menu.checkbox-menu { max-height: 200px; overflow-y: auto; }
   </style>
 </head>
 <body>
@@ -26,240 +21,197 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="mainTabs" role="tablist">
       <li class="nav-item">
-        <button
-          class="nav-link active"
-          id="data-tab-btn"
-          data-bs-toggle="tab"
-          data-bs-target="#data-tab"
-          type="button"
-          role="tab"
-        >Data</button>
+        <button class="nav-link active" id="data-tab-btn" data-bs-toggle="tab" data-bs-target="#data-tab" type="button">Data</button>
       </li>
       <li class="nav-item">
-        <button
-          class="nav-link"
-          id="viz-tab-btn"
-          data-bs-toggle="tab"
-          data-bs-target="#viz-tab"
-          type="button"
-          role="tab"
-        >Visualization</button>
+        <button class="nav-link" id="viz-tab-btn" data-bs-toggle="tab" data-bs-target="#viz-tab" type="button">Visualization</button>
       </li>
     </ul>
-
     <div class="tab-content">
       <!-- DATA TAB -->
-      <div
-        class="tab-pane fade show active"
-        id="data-tab"
-        role="tabpanel"
-        aria-labelledby="data-tab-btn"
-      >
-        <div class="row my-3 g-2">
+      <div class="tab-pane fade show active" id="data-tab">
+        <div class="row my-3 g-2 align-items-end">
           <div class="col-md-4">
             <label class="form-label">LOS User</label>
-            <select id="userFilter" class="form-select"></select>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Select Users
+              </button>
+              <ul class="dropdown-menu checkbox-menu" aria-labelledby="userDropdown" id="userFilterContainer">
+                <!-- Checkboxes inserted here -->
+              </ul>
+            </div>
           </div>
           <div class="col-md-4">
             <label class="form-label">Start Date</label>
-            <input type="date" id="startDate" class="form-control" />
+            <input type="date" id="startDate" class="form-control">
           </div>
           <div class="col-md-4">
             <label class="form-label">End Date</label>
-            <input type="date" id="endDate" class="form-control" />
+            <input type="date" id="endDate" class="form-control">
           </div>
         </div>
-
         <div class="table-responsive">
           <table class="table table-bordered table-striped">
-            <thead class="table-light">
-              <tr>
-                <th>LOS User</th>
-                <th>Date</th>
-                <th># Leads Captured</th>
-                <th># Referrals Captured</th>
-                <th># Leads Converted</th>
-                <th># Leads Not Converted</th>
-                <th># Referrals Converted</th>
-                <th># Referrals Not Converted</th>
-                <th>% Leads of Total</th>
-                <th>% Referrals of Total</th>
-                <th>Avg Conversion Rate</th>
-              </tr>
-            </thead>
+            <thead class="table-light"><tr>
+                <th>LOS User</th><th>Date</th><th># Leads Captured</th><th># Referrals Captured</th>
+                <th># Leads Converted</th><th># Leads Not Converted</th><th># Referrals Converted</th><th># Referrals Not Converted</th>
+                <th>% Leads of Total</th><th>% Referrals of Total</th><th>Avg Conversion Rate</th>
+            </tr></thead>
             <tbody id="dataBody"></tbody>
           </table>
         </div>
       </div>
-
       <!-- VISUALIZATION TAB -->
-      <div
-        class="tab-pane fade"
-        id="viz-tab"
-        role="tabpanel"
-        aria-labelledby="viz-tab-btn"
-      >
-        <div class="row my-3 g-2">
+      <div class="tab-pane fade" id="viz-tab">
+        <div class="row my-3 g-2 align-items-end">
           <div class="col-md-4">
             <label class="form-label">LOS User</label>
-            <select id="userFilter2" class="form-select"></select>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button" id="userDropdown2" data-bs-toggle="dropdown" aria-expanded="false">
+                Select Users
+              </button>
+              <ul class="dropdown-menu checkbox-menu" aria-labelledby="userDropdown2" id="userFilter2Container">
+                <!-- Checkboxes inserted here -->
+              </ul>
+            </div>
           </div>
           <div class="col-md-4">
             <label class="form-label">Start Date</label>
-            <input type="date" id="startDate2" class="form-control" />
+            <input type="date" id="startDate2" class="form-control">
           </div>
           <div class="col-md-4">
             <label class="form-label">End Date</label>
-            <input type="date" id="endDate2" class="form-control" />
+            <input type="date" id="endDate2" class="form-control">
           </div>
         </div>
-
-        <div id="treemap" class="chart" style="height: 400px;"></div>
-        <div id="barLeads" class="chart" style="height: 400px;"></div>
-        <div id="barReferrals" class="chart" style="height: 400px;"></div>
-        <div id="barLeadsCount" class="chart" style="height: 400px;"></div>
-        <div id="barRefsCount" class="chart" style="height: 400px;"></div>
-        <div id="pieChart" class="chart" style="height: 400px;"></div>
+        <div id="treemap" class="chart" style="height:400px;"></div>
+        <div id="barLeads" class="chart" style="height:400px;"></div>
+        <div id="barReferrals" class="chart" style="height:400px;"></div>
+        <div id="barLeadsCount" class="chart" style="height:400px;"></div>
+        <div id="barRefsCount" class="chart" style="height:400px;"></div>
+        <div id="pieChart" class="chart" style="height:400px;"></div>
       </div>
     </div>
   </div>
-
-  <!-- Bootstrap 5 JS Bundle -->
+  <!-- Bootstrap 5 JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   <script>
-    // ---- Generate dummy data for 100 LOS users ----
+    // Dummy data
     const dummyData = [];
     const users = Array.from({ length: 100 }, (_, i) => `User ${i + 1}`);
     const baseDate = new Date('2025-05-01');
-    users.forEach((user, idx) => {
-      const date = new Date(baseDate);
-      date.setDate(baseDate.getDate() + (idx % 30));
-      const formatted = date.toISOString().split('T')[0];
-      const leads     = Math.floor(Math.random() * 100);
-      const refs      = Math.floor(Math.random() * 50);
+    users.forEach((u, i) => {
+      const d = new Date(baseDate);
+      d.setDate(d.getDate() + (i % 30));
+      const date = d.toISOString().split('T')[0];
+      const leads = Math.floor(Math.random() * 100);
+      const refs = Math.floor(Math.random() * 50);
       const leadsConv = Math.floor(leads * (0.3 + Math.random() * 0.5));
-      const refsConv  = Math.floor(refs  * (0.3 + Math.random() * 0.5));
-      const leadsNot  = leads     - leadsConv;
-      const refsNot   = refs      - refsConv;
-      dummyData.push({ user, date: formatted, leads, refs, leadsConv, leadsNot, refsConv, refsNot });
+      const refsConv = Math.floor(refs * (0.3 + Math.random() * 0.5));
+      dummyData.push({ user: u, date, leads, refs, leadsConv, leadsNot: leads - leadsConv, refsConv, refsNot: refs - refsConv });
     });
 
-    function parseDate(val) {
-      return val ? new Date(val) : null;
-    }
+    function parseDate(v) { return v ? new Date(v) : null; }
 
     function initFilters() {
       const uniqueUsers = [...new Set(dummyData.map(d => d.user))];
-      const f1 = document.getElementById('userFilter');
-      const f2 = document.getElementById('userFilter2');
-      [f1, f2].forEach(sel => {
-        sel.innerHTML = '<option value="">All Users</option>' +
-          uniqueUsers.map(u => `<option>${u}</option>`).join('');
+      const c1 = document.getElementById('userFilterContainer');
+      const c2 = document.getElementById('userFilter2Container');
+      uniqueUsers.forEach(u => {
+        [c1, c2].forEach((container, idx) => {
+          const id = `cb_${idx}_${u}`;
+          const li = document.createElement('li');
+          li.className = 'px-3';
+          li.innerHTML = `
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="${id}" value="${u}" checked>
+              <label class="form-check-label" for="${id}">${u}</label>
+            </div>`;
+          container.append(li);
+        });
       });
       const dates = dummyData.map(d => d.date).sort();
       ['startDate', 'endDate', 'startDate2', 'endDate2'].forEach((id, i) => {
         document.getElementById(id).value = i % 2 === 0 ? dates[0] : dates[dates.length - 1];
       });
-      [f1, document.getElementById('startDate'), document.getElementById('endDate')]
+      document.querySelectorAll('#userFilterContainer input, #startDate, #endDate')
         .forEach(el => el.addEventListener('change', renderTable));
-      [f2, document.getElementById('startDate2'), document.getElementById('endDate2')]
+      document.querySelectorAll('#userFilter2Container input, #startDate2, #endDate2')
         .forEach(el => el.addEventListener('change', renderViz));
     }
 
-    function getFiltered(data, userVal, startVal, endVal) {
-      const start = parseDate(startVal);
-      const end   = parseDate(endVal);
-      return data.filter(d => {
-        const dt = new Date(d.date);
-        return (!userVal || d.user === userVal) && (!start || dt >= start) && (!end || dt <= end);
-      });
+    function getSelected(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input:checked`)).map(i => i.value);
+    }
+
+    function getFiltered(data, containerId, startId, endId) {
+      const sel = getSelected(containerId);
+      const start = parseDate(document.getElementById(startId).value);
+      const end = parseDate(document.getElementById(endId).value);
+      return data.filter(d => sel.includes(d.user) && (!start || new Date(d.date) >= start) && (!end || new Date(d.date) <= end));
     }
 
     function renderTable() {
-      const userVal = document.getElementById('userFilter').value;
-      const start   = document.getElementById('startDate').value;
-      const end     = document.getElementById('endDate').value;
-      const rows    = getFiltered(dummyData, userVal, start, end);
-      const totalLeads = rows.reduce((sum, d) => sum + d.leads, 0);
-      const totalRefs  = rows.reduce((sum, d) => sum + d.refs, 0);
-
+      const rows = getFiltered(dummyData, 'userFilterContainer', 'startDate', 'endDate');
+      const totLeads = rows.reduce((s, d) => s + d.leads, 0);
+      const totRefs = rows.reduce((s, d) => s + d.refs, 0);
       const body = document.getElementById('dataBody');
       body.innerHTML = rows.map(d => {
-        const pctLeads = totalLeads ? ((d.leads / totalLeads) * 100).toFixed(1) + '%' : '-';
-        const pctRefs  = totalRefs  ? ((d.refs  / totalRefs)  * 100).toFixed(1) + '%' : '-';
-        const avgConv  = (((d.leadsConv / d.leads || 0) + (d.refsConv / d.refs || 0)) / 2 * 100).toFixed(1) + '%';
-        return `
-          <tr>
-            <td>${d.user}</td>
-            <td>${d.date}</td>
-            <td>${d.leads}</td>
-            <td>${d.refs}</td>
-            <td>${d.leadsConv}</td>
-            <td>${d.leadsNot}</td>
-            <td>${d.refsConv}</td>
-            <td>${d.refsNot}</td>
-            <td>${pctLeads}</td>
-            <td>${pctRefs}</td>
-            <td>${avgConv}</td>
-          </tr>`;
+        const pctLeads = totLeads ? ((d.leads / totLeads) * 100).toFixed(1) + '%' : '-';
+        const pctRefs = totRefs ? ((d.refs / totRefs) * 100).toFixed(1) + '%' : '-';
+        const avgConv = (((d.leadsConv / d.leads || 0) + (d.refsConv / d.refs || 0)) / 2 * 100).toFixed(1) + '%';
+        return `<tr>
+          <td>${d.user}</td><td>${d.date}</td><td>${d.leads}</td><td>${d.refs}</td>
+          <td>${d.leadsConv}</td><td>${d.leadsNot}</td><td>${d.refsConv}</td><td>${d.refsNot}</td>
+          <td>${pctLeads}</td><td>${pctRefs}</td><td>${avgConv}</td>
+        </tr>`;
       }).join('');
     }
 
     function renderViz() {
-      const userVal = document.getElementById('userFilter2').value;
-      const start   = document.getElementById('startDate2').value;
-      const end     = document.getElementById('endDate2').value;
-      const rows    = getFiltered(dummyData, userVal, start, end);
-      const agg     = {};
+      const rows = getFiltered(dummyData, 'userFilter2Container', 'startDate2', 'endDate2');
+      const agg = {};
       rows.forEach(d => {
         if (!agg[d.user]) agg[d.user] = { leads: 0, refs: 0, leadsConv: 0, refsConv: 0 };
-        agg[d.user].leads     += d.leads;
-        agg[d.user].refs      += d.refs;
+        agg[d.user].leads += d.leads;
+        agg[d.user].refs += d.refs;
         agg[d.user].leadsConv += d.leadsConv;
-        agg[d.user].refsConv  += d.refsConv;
+        agg[d.user].refsConv += d.refsConv;
       });
-      const users      = Object.keys(agg);
-      const leadsArr   = users.map(u => agg[u].leads);
-      const refsArr    = users.map(u => agg[u].refs);
-      const leadPct    = users.map((u, i) => agg[u].leads ? agg[u].leadsConv / agg[u].leads * 100 : 0);
-      const refPct     = users.map((u, i) => agg[u].refs  ? agg[u].refsConv  / agg[u].refs  * 100 : 0);
-      const avgPct     = leadPct.map((v, i) => (v + refPct[i]) / 2);
+      const us = Object.keys(agg);
+      const leadsArr = us.map(u => agg[u].leads);
+      const refsArr = us.map(u => agg[u].refs);
+      const leadPct = us.map(u => agg[u].leads ? agg[u].leadsConv / agg[u].leads * 100 : 0);
+      const refPct = us.map(u => agg[u].refs ? agg[u].refsConv / agg[u].refs * 100 : 0);
+      const avgPct = leadPct.map((v, i) => (v + refPct[i]) / 2);
 
       Plotly.newPlot('treemap', [{
-        type: 'treemap',
-        labels: ['Leads', 'Referrals'],
-        parents: ['', ''],
+        type: 'treemap', labels: ['Leads', 'Referrals'], parents: ['', ''],
         values: [leadsArr.reduce((a, b) => a + b, 0), refsArr.reduce((a, b) => a + b, 0)]
-      }], { margin: { l: 0, r: 0, t: 30, b: 0 }, title: 'Leads vs. Referrals' });
+      }], { margin: { l: 0, r: 0, t: 30, b: 0}, title: 'Leads vs Referrals'});
 
-      Plotly.newPlot('barLeads', [{ x: users, y: leadPct, type: 'bar' }],
-        { margin: { l: 40, r: 20, t: 30, b: 40 }, title: 'Leads → Relationships (%)' });
+      Plotly.newPlot('barLeads', [{ x: us, y: leadPct, type: 'bar' }],
+        { margin: { l: 40, r: 20, t: 30, b: 40}, title: 'Leads → Relationships (%)'});
 
-      Plotly.newPlot('barReferrals', [{ x: users, y: refPct, type: 'bar' }],
-        { margin: { l: 40, r: 20, t: 30, b: 40 }, title: 'Referrals → Relationships (%)' });
+      Plotly.newPlot('barReferrals', [{ x: us, y: refPct, type: 'bar' }],
+        { margin: { l: 40, r: 20, t: 30, b: 40}, title: 'Referrals → Relationships (%)'});
 
       Plotly.newPlot('barLeadsCount', [
-        { x: users, y: leadsArr, name: 'Created', type: 'bar' },
-        { x: users, y: users.map(u => agg[u].leadsConv), name: 'Converted', type: 'bar' }
-      ], { margin: { l: 40, r: 20, t: 30, b: 40 }, barmode: 'group', title: 'Leads Created vs Converted' });
+        { x: us, y: leadsArr,  name: 'Created',   type: 'bar'},
+        { x: us, y: us.map(u => agg[u].leadsConv), name: 'Converted', type: 'bar'}
+      ], { margin: { l: 40, r: 20, t: 30, b: 40}, barmode: 'group', title: 'Leads Created vs Converted'});
 
       Plotly.newPlot('barRefsCount', [
-        { x: users, y: refsArr, name: 'Created', type: 'bar' },
-        { x: users, y: users.map(u => agg[u].refsConv), name: 'Converted', type: 'bar' }
-      ], { margin: { l: 40, r: 20, t: 30, b: 40 }, barmode: 'group', title: 'Referrals Created vs Converted' });
+        { x: us, y: refsArr,  name: 'Created',   type: 'bar'},
+        { x: us, y: us.map(u => agg[u].refsConv), name: 'Converted', type: 'bar'}
+      ], { margin: { l: 40, r: 20, t: 30, b: 40}, barmode: 'group', title: 'Referrals Created vs Converted'});
 
-      Plotly.newPlot('pieChart', [{
-        values: avgPct,
-        labels: users,
-        type: 'pie',
-        textinfo: 'label+percent'
-      }], { margin: { l: 0, r: 0, t: 30, b: 0 }, title: 'Avg Lead/Referral Conversion (%)' });
+      Plotly.newPlot('pieChart', [{ values: avgPct, labels: us, type: 'pie', textinfo: 'label+percent'}],
+        { margin: { l: 0, r: 0, t: 30, b: 0}, title: 'Avg Conversion (%)'});
     }
 
-    initFilters();
-    renderTable();
-    renderViz();
+    initFilters(); renderTable(); renderViz();
   </script>
 </body>
 </html>
